@@ -1,0 +1,85 @@
+{
+	"scope": "source.wit",
+	"completions": [
+		{
+			"trigger": "_",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "as",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "constructor",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "enum",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "export",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "flags",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "func",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "import",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "include",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "interface",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "package",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "record",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "resource",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "static",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "type",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "union",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "use",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "variant",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "with",
+			"kind": "keyword",
+		},
+		{
+			"trigger": "world",
+			"kind": "keyword",
+		},
+	]
+}

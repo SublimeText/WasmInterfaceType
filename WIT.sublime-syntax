@@ -1,0 +1,753 @@
+%YAML 1.2
+---
+# https://component-model.bytecodealliance.org/design/wit.html
+# https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
+# http://www.sublimetext.com/docs/syntax.html
+name: WIT
+scope: source.wit
+version: 2
+
+file_extensions:
+  - wit
+
+variables:
+
+  id: (?!{{keyword}}){{id_start}}{{id_char}}*
+  id_start: '[[:alpha:]_%]'
+  id_char: '[[:alnum:]_-]'
+
+  break: (?!{{id_char}})
+
+  # a lazy semver pattern
+  semver: '[[:alnum:]_.+-]*[[:alnum:]_]'
+
+  keyword: |-
+    (?x: export | import | include | package | type | use | enum | flags
+    | interface | record | resource | union | variant | world ){{break}}
+
+  builtin_types: |-
+    (?x: bool | borrow | char | f32 | f64 | list | option | result
+    | s16 | s32 | s64 | s8 | string | tuple | u8 | u16 | u32 | u64 ){{break}}
+
+contexts:
+
+  prototype:
+    - include: block-comments
+    - include: line-comments
+
+  main:
+    # top-level items
+    - include: package-declarations
+    - include: interface-declarations
+    - include: world-declarations
+
+    # world items
+    - include: export-declarations
+    - include: import-declarations
+    - include: include-declarations
+    - include: use-declarations
+
+    # record and resource items
+    - include: function-declarations
+    - include: variable-declarations
+
+    # typedef items
+    - include: enum-declarations
+    - include: flags-declarations
+    - include: record-declarations
+    - include: resource-declarations
+    - include: type-declarations
+    - include: variant-declarations
+
+    # expressions
+    - include: delimiters
+    - include: operators
+    - include: terminators
+    - include: type-annotations
+    - include: builtin-types
+    - include: numbers
+    - include: variables
+
+    # stray brackets
+    - match: '[>)\]}]'
+      scope: invalid.illegal.stray.wit
+
+###[ COMMENTS ]################################################################
+
+  block-comments:
+    - match: /\*\*+(?!/)
+      scope: comment.block.documentation.wit punctuation.definition.comment.begin.wit
+      embed: scope:text.html.markdown#indented-markdown
+      embed_scope: comment.block.documentation.wit
+      escape: \*+/
+      escape_captures:
+        0: comment.block.documentation.wit punctuation.definition.comment.end.wit
+    - match: /\*
+      scope: punctuation.definition.comment.begin.wit
+      push: block-comment-body
+
+  block-comment-body:
+    - meta_include_prototype: false
+    - meta_scope: comment.block.wit
+    - match: \*+/
+      scope: punctuation.definition.comment.end.wit
+      pop: 1
+
+  line-comments:
+    - match: ///+
+      scope: comment.line.documentation.wit punctuation.definition.comment.wit
+      embed: scope:text.html.markdown#indented-markdown
+      embed_scope: comment.line.documentation.wit
+      escape: $\n?
+      escape_captures:
+        0: comment.line.documentation.wit
+    - match: //
+      scope: punctuation.definition.comment.wit
+      push: line-comment-body
+
+  line-comment-body:
+    - meta_include_prototype: false
+    - meta_scope: comment.line.double-slash.wit
+    - match: $\n?
+      pop: 1
+
+###[ PACKAGE DECLARATIONS ]####################################################
+
+  package-declarations:
+    - match: package{{break}}
+      scope: keyword.declaration.package.wit
+      push: package-identifier
+
+  package-identifier:
+    - meta_scope: meta.package.wit
+    - include: namespaces
+    - include: packages
+    # declared package name
+    - match: ([:/]?)({{id}})(?:(@)({{semver}}))?
+      scope: meta.path.wit
+      captures:
+        1: punctuation.separator.path.wit
+        2: entity.name.namespace.package.wit
+        3: punctuation.separator.version.wit
+        4: constant.numeric.version.wit
+      pop: 1
+    - include: else-pop
+
+###[ INTERFACE DECLARATIONS ]##################################################
+
+  interface-declarations:
+    - match: interface{{break}}
+      scope: meta.interface.wit keyword.declaration.interface.wit
+      push:
+        - interface-block
+        - interface-identifier
+
+  interface-identifier:
+    - match: '{{id}}'
+      scope: entity.name.interface.wit
+      pop: 1
+    - include: else-pop
+
+  interface-block:
+    - meta_content_scope: meta.interface.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: interface-block-body
+    - include: else-pop
+
+  interface-block-body:
+    - meta_scope: meta.interface.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - include: main
+
+###[ WORLD DECLARATIONS ]######################################################
+
+  world-declarations:
+    - match: world{{break}}
+      scope: meta.world.wit keyword.declaration.world.wit
+      push:
+        - world-block
+        - world-identifier
+
+  world-identifier:
+    - match: '{{id}}'
+      scope: entity.name.namespace.world.wit
+      pop: 1
+    - include: else-pop
+
+  world-block:
+    - meta_content_scope: meta.world.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: world-block-body
+    - include: else-pop
+
+  world-block-body:
+    - meta_scope: meta.world.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - include: main
+
+###[ EXPORT DECLARATIONS ]#####################################################
+
+  export-declarations:
+    - match: export{{break}}
+      scope: keyword.control.export.wit
+      push:
+        - export-meta
+        - import-export-identifier
+
+  export-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.statement.export.wit
+    - include: immediately-pop
+
+###[ IMPORT DECLARATIONS ]#####################################################
+
+  import-declarations:
+    - match: import{{break}}
+      scope: keyword.control.import.wit
+      push:
+        - import-meta
+        - import-export-identifier
+
+  import-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.statement.import.wit
+    - include: immediately-pop
+
+  import-export-identifier:
+    # functions
+    - match: ({{id}})(\s*(:)\s*(?:(static)\s+)?(func{{break}}))
+      captures:
+        1: meta.function.identifier.wit entity.name.function.wit
+        2: meta.function.wit
+        3: punctuation.separator.type.wit
+        4: storage.modifier.static.wit
+        5: keyword.declaration.function.wit
+      push:
+        - function-return-type
+        - function-parameter-list
+    # interfaces
+    - match: ({{id}})(\s*(:)\s*(interface{{break}}))
+      captures:
+        1: meta.interface.identifier.wit entity.name.interface.wit
+        2: meta.interface.wit
+        3: punctuation.separator.type.wit
+        4: keyword.declaration.interface.wit
+      set: interface-type-block
+    # types
+    - match: (?=\S)
+      set: qualified-interface
+
+  interface-type-block:
+    - meta_content_scope: meta.interface.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: interface-block-body
+    - include: else-pop
+
+  qualified-interface:
+    - meta_include_prototype: false
+    - include: namespaces
+    - include: packages
+    - match: ({{id}})(?:(@)({{semver}}))?
+      scope: meta.path.wit
+      captures:
+        1: entity.name.interface.wit
+        2: punctuation.separator.version.wit
+        3: constant.numeric.version.wit
+      pop: 1
+    - include: immediately-pop
+
+###[ INCLUDE DECLARATIONS ]####################################################
+
+  include-declarations:
+    - match: include{{break}}
+      scope: meta.statement.include.wit keyword.control.include.wit
+      push:
+        - include-with
+        - include-identifier
+
+  include-identifier:
+    - include: namespaces
+    - include: packages
+    # included world
+    - match: '{{id}}'
+      scope: meta.path.wit support.namespace.world.wit
+      pop: 1
+    - include: else-pop
+
+  include-with:
+    - meta_content_scope: meta.statement.include.path.wit
+    - match: with{{break}}
+      scope: meta.statement.include.with.wit keyword.other.with.wit
+      set: include-name-list
+    - include: else-pop
+
+  include-name-list:
+    - meta_content_scope: meta.statement.include.with.wit
+    - match: \{
+      scope: punctuation.section.sequence.begin.wit
+      set: include-name-list-body
+    - include: else-pop
+
+  include-name-list-body:
+    - meta_scope: meta.statement.include.with.wit meta.sequence.list.names.wit
+    - match: \}
+      scope: punctuation.section.sequence.end.wit
+      pop: 1
+    - include: delimiters
+    - include: as-ids
+    - include: variables
+
+###[ USE DECLARATIONS ]########################################################
+
+  use-declarations:
+    - match: use{{break}}
+      scope: meta.statement.use.wit keyword.control.use.wit
+      push:
+        - use-more
+        - use-identifier
+
+  use-identifier:
+    - include: namespaces
+    - include: packages
+    # owning interfaces (local use item, only)
+    - match: ({{id}})(\.)
+      scope: meta.path.wit
+      captures:
+        1: support.interface.wit
+        2: punctuation.separator.path.wit
+    # used interface (top-level use item, only)
+    - match: ({{id}})(?:(@)({{semver}}))?
+      scope: meta.path.wit
+      captures:
+        1: support.interface.wit
+        2: punctuation.separator.version.wit
+        3: constant.numeric.version.wit
+      pop: 1
+    - include: else-pop
+
+  use-more:
+    - meta_content_scope: meta.statement.use.path.wit
+    # top-level use item
+    - match: as{{break}}
+      scope: keyword.opearator.assignment.as.wit
+      set: use-as-identifier
+    # nested use item
+    - match: \{
+      scope: punctuation.section.sequence.begin.wit
+      set: use-name-list-body
+    - include: else-pop
+
+  use-as-identifier:
+    - meta_scope: meta.statement.use.as.wit
+    - match: '{{id}}'
+      scope: entity.name.interface.wit
+      pop: 1
+    - include: else-pop
+
+  use-name-list-body:
+    - meta_scope: meta.statement.use.items.wit meta.sequence.list.names.wit
+    - match: \}
+      scope: punctuation.section.sequence.end.wit
+      pop: 1
+    - include: delimiters
+    - include: as-ids
+    - include: variables
+
+###[ ENUM DECLARATIONS ]#######################################################
+
+  enum-declarations:
+    - match: enum{{break}}
+      scope: meta.enum.wit keyword.declaration.enum.wit
+      push:
+        - enum-block
+        - enum-identifier
+
+  enum-identifier:
+    - match: '{{id}}'
+      scope: entity.name.enum.wit
+      pop: 1
+    - include: else-pop
+
+  enum-block:
+    - meta_content_scope: meta.enum.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: enum-block-body
+    - include: else-pop
+
+  enum-block-body:
+    - meta_scope: meta.enum.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - include: delimiters
+    - include: constants
+
+###[ FLAGS DECLARATIONS ]######################################################
+
+  flags-declarations:
+    - match: flags{{break}}
+      scope: meta.flags.wit keyword.declaration.flags.wit
+      push:
+        - flags-block
+        - flags-identifier
+
+  flags-identifier:
+    - match: '{{id}}'
+      scope: entity.name.enum.flags.wit
+      pop: 1
+    - include: else-pop
+
+  flags-block:
+    - meta_content_scope: meta.flags.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: flags-block-body
+    - include: else-pop
+
+  flags-block-body:
+    - meta_scope: meta.flags.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - include: delimiters
+    - include: constants
+
+###[ FUNCTION DECLARATIONS ]###################################################
+
+  function-declarations:
+    # resource constructor
+    - match: constructor(?=\s*\()
+      scope: meta.function.identifier.wit entity.name.function.constructor.wit
+      push:
+        - function-meta
+        - function-parameter-list
+    # normal function definition
+    - match: ({{id}})(\s*(:)\s*(?:(static)\s+)?(func{{break}}))
+      captures:
+        1: meta.function.identifier.wit entity.name.function.wit
+        2: meta.function.wit
+        3: punctuation.separator.type.wit
+        4: storage.modifier.static.wit
+        5: keyword.declaration.function.wit
+      push:
+        - function-return-type
+        - function-parameter-list
+
+  function-meta:
+    - meta_include_prototype: false
+    - meta_content_scope: meta.function.wit
+    - include: immediately-pop
+
+  function-parameter-list:
+    - match: \(
+      scope: punctuation.section.parameters.begin.wit
+      set: function-parameter-list-body
+    - include: else-pop
+
+  function-parameter-list-body:
+    - clear_scopes: 1
+    - meta_scope: meta.function.parameters.wit
+    - match: \)
+      scope: punctuation.section.parameters.end.wit
+      pop: 1
+    - match: '{{id}}'
+      scope: variable.parameter.wit
+    - include: delimiters
+    - include: type-annotations
+
+  function-return-type:
+    - meta_content_scope: meta.function.wit
+    - match: ->
+      scope: keyword.operator.arrow.wit
+      set:
+        - function-return-type-meta
+        - function-return-type-value
+    - include: else-pop
+
+  function-return-type-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.function.return-type.wit
+    - include: immediately-pop
+
+  function-return-type-value:
+    - match: \(
+      scope: punctuation.section.sequence.begin.wit
+      set: function-return-type-tuple-body
+    - include: type
+
+  function-return-type-tuple-body:
+    - meta_scope: meta.sequence.tuple.wit
+    - match: \)
+      scope: punctuation.section.sequence.end.wit
+      pop: 1
+    - match: '{{id}}'
+      scope: entity.name.type.wit
+    - include: delimiters
+    - include: type-annotations
+
+###[ RECORD DECLARATIONS ]#####################################################
+
+  record-declarations:
+    - match: record{{break}}
+      scope: meta.record.wit keyword.declaration.record.wit
+      push:
+        - record-block
+        - record-identifier
+
+  record-identifier:
+    - match: '{{id}}'
+      scope: entity.name.struct.record.wit
+      pop: 1
+    - include: else-pop
+
+  record-block:
+    - meta_content_scope: meta.record.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: record-block-body
+    - include: else-pop
+
+  record-block-body:
+    - meta_scope: meta.record.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - include: delimiters
+    - include: variable-declarations
+
+###[ RESOURCE DECLARATIONS ]###################################################
+
+  resource-declarations:
+    - match: resource{{break}}
+      scope: meta.resource.wit keyword.declaration.resource.wit
+      push:
+        - resource-block
+        - resource-identifier
+
+  resource-identifier:
+    - match: '{{id}}'
+      scope: entity.name.class.resource.wit
+      pop: 1
+    - include: else-pop
+
+  resource-block:
+    - meta_content_scope: meta.resource.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: resource-block-body
+    - include: else-pop
+
+  resource-block-body:
+    - meta_scope: meta.resource.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - include: terminators
+    - include: function-declarations
+
+###[ TYPE DECLARATIONS ]#######################################################
+
+  type-declarations:
+    - match: type{{break}}
+      scope: meta.type-alias.wit keyword.declaration.type.wit
+      push:
+        - type-assignment
+        - type-identifier
+
+  type-identifier:
+    - match: '{{id}}'
+      scope: entity.name.type.alias.wit
+      pop: 1
+    - include: else-pop
+
+  type-assignment:
+    - meta_content_scope: meta.type-alias.identifier.wit
+    - match: =
+      scope: keyword.operator.assignment.wit
+      set:
+        - type-meta
+        - type
+    - include: else-pop
+
+  type-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.type-alias.wit
+    - include: immediately-pop
+
+###[ VARIABLE DECLARATIONS ]###################################################
+
+  variable-declarations:
+    - match: ({{id}})\s*(:)
+      captures:
+        1: variable.other.wit
+        2: punctuation.separator.type.wit
+      push:
+        - variable-declaration-meta
+        - type
+
+  variable-declaration-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.declaration.variable.wit
+    - include: immediately-pop
+
+###[ VARIANT DECLARATIONS ]####################################################
+
+  variant-declarations:
+    - match: variant{{break}}
+      scope: meta.variant.wit keyword.declaration.variant.wit
+      push:
+        - variant-block
+        - variant-identifier
+
+  variant-identifier:
+    - match: '{{id}}'
+      scope: entity.name.type.variant.wit
+      pop: 1
+    - include: else-pop
+
+  variant-block:
+    - meta_content_scope: meta.variant.identifier.wit
+    - match: \{
+      scope: punctuation.section.block.begin.wit
+      set: variant-block-body
+    - include: else-pop
+
+  variant-block-body:
+    - meta_scope: meta.variant.body.wit meta.block.wit
+    - match: \}
+      scope: punctuation.section.block.end.wit
+      pop: 1
+    - match: \(
+      scope: punctuation.definition.parameters.begin.wit
+      push:
+        - variant-type-parameter-end
+        - type
+    - include: delimiters
+    - match: '{{id}}'
+      scope: meta.tag.wit entity.name.constant.wit
+
+  variant-type-parameter-end:
+    - meta_scope: meta.tag.parameters.wit
+    - match: \)
+      scope: punctuation.definition.parameters.end.wit
+      pop: 1
+    - match: '[^\s/)]+'
+      scope: invalid.illegal.wit
+
+###[ TYPES ]###################################################################
+
+  type-annotations:
+    - match: ':'
+      scope: punctuation.separator.type.wit
+      push: type
+
+  builtin-types:
+    - match: _{{break}}
+      scope: storage.type.discard.wit
+    - match: '{{builtin_types}}'
+      scope: meta.type.wit storage.type.wit
+      push: type-parameter-list
+
+  user-types:
+    - match: '{{id}}'
+      scope: meta.type.wit support.type.wit
+      push: type-parameter-list
+
+  type:
+    - match: _{{break}}
+      scope: storage.type.discard.wit
+      pop: 1
+    - match: '{{builtin_types}}'
+      scope: meta.type.wit storage.type.wit
+      set: type-parameter-list
+    - match: '{{id}}'
+      scope: meta.type.wit support.type.wit
+      set: type-parameter-list
+    - include: else-pop
+
+  type-parameter-list:
+    - meta_content_scope: meta.type.wit
+    - match: \<
+      scope: punctuation.definition.generic.begin.wit
+      set: type-parameter-list-body
+    - include: else-pop
+
+  type-parameter-list-body:
+    - meta_scope: meta.type.wit meta.generic.wit
+    - match: \>
+      scope: punctuation.definition.generic.end.wit
+      pop: 1
+    - include: delimiters
+    - include: builtin-types
+    - include: user-types
+
+###[ IDENTIFIERS ]#############################################################
+
+  as-ids:
+    - match: as{{break}}
+      scope: keyword.opearator.assignment.as.wit
+      push: as-id-identifier
+
+  as-id-identifier:
+    - match: '{{id}}'
+      scope: entity.name.type.wit
+      pop: 1
+    - include: else-pop
+
+  constants:
+    - match: '{{id}}'
+      scope: entity.name.constant.wit
+
+  variables:
+    - match: '{{id}}'
+      scope: variable.other.wit
+
+  namespaces:
+    - match: ({{id}})(\:)
+      scope: meta.path.wit
+      captures:
+        1: support.namespace.wit
+        2: punctuation.separator.path.wit
+
+  packages:
+    - match: ({{id}})(/)
+      scope: meta.path.wit
+      captures:
+        1: support.namespace.package.wit
+        2: punctuation.separator.path.wit
+
+  numbers:
+    - match: \d+
+      scope: meta.number.integer.decimal.wit constant.numeric.value.wit
+
+###[ OPERATORS ]###############################################################
+
+  operators:
+    - match: =
+      scope: keyword.operator.assignment.wit
+
+  delimiters:
+    - match: ','
+      scope: punctuation.separator.sequence.wit
+
+  terminators:
+    - match: ';'
+      scope: punctuation.terminator.statement.wit
+
+###[ PROTOTYPES ]##############################################################
+
+  else-pop:
+    - match: (?=\S)
+      pop: 1
+
+  immediately-pop:
+    - match: ''
+      pop: 1

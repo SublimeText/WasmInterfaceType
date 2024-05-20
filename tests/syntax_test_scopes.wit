@@ -1,0 +1,1192 @@
+// SYNTAX TEST "WIT.sublime-syntax"
+
+/// Comments //////////////////////////////////////////////////////////////////
+
+// comment
+// <- comment.line.double-slash.wit punctuation.definition.comment.wit
+ // <- comment.line.double-slash.wit punctuation.definition.comment.wit
+//^^^^^^^^ comment.line.double-slash.wit - punctuation
+
+/// comment
+// <- comment.line.documentation.wit punctuation.definition.comment.wit
+ // <- comment.line.documentation.wit punctuation.definition.comment.wit
+  // <- comment.line.documentation.wit punctuation.definition.comment.wit
+// ^^^^^^^^ comment.line.documentation.wit - punctuation
+
+   /**/
+//^ - comment - punctuation
+// ^^ comment.block.wit punctuation.definition.comment.begin.wit
+//   ^^ comment.block.wit punctuation.definition.comment.end.wit
+//     ^ - comment - punctuation
+
+   /*
+//^ - comment - punctuation
+// ^^ comment.block.wit punctuation.definition.comment.begin.wit
+//   ^ comment.block.wit - punctuation
+
+    # no markdown in normal comments
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.wit - markup.heading
+
+   */
+// <- comment.block.wit
+//^ comment.block.wit - punctuation
+// ^^ comment.block.wit punctuation.definition.comment.end.wit
+//   ^ - comment
+
+   /**
+//^ - comment - punctuation
+// ^^^ comment.block.documentation.wit punctuation.definition.comment.begin.wit
+//    ^ comment.block.documentation.wit - punctuation
+   # Header
+// ^^^^^^^^^ comment.block.documentation.wit markup.heading.1.markdown
+
+   > block quote
+// ^^^^^^^^^^^^^^ comment.block.documentation.wit markup.quote.markdown
+
+   ```python
+// ^^^^^^^^^^ comment.block.documentation.wit meta.code-fence.definition.begin
+   import foo
+   ```
+// ^^^ comment.block.documentation.wit meta.code-fence.definition.end punctuation.definition.raw.code-fence
+   */
+// <- comment.block.documentation.wit
+//^ comment.block.documentation.wit - punctuation
+// ^^ comment.block.documentation.wit punctuation.definition.comment.end.wit
+//   ^ - comment - punctuation
+
+
+/// Identifiers ///////////////////////////////////////////////////////////////
+
+   foo
+// ^^^ variable.other.wit
+
+   %foo
+// ^^^^ variable.other.wit
+
+   foo-bar
+// ^^^^^^^ variable.other.wit
+
+   -foo
+// ^ - variable
+//  ^^^ variable.other.wit
+
+   -foo-bar
+// ^ - variable
+//  ^^^^^^^ variable.other.wit
+
+   // the following are not allowed by WIT, but are accepted
+   // to handle incomplete code situations
+
+   foo--bar
+// ^^^^^^^^ variable.other.wit
+
+   foo-
+// ^^^^ variable.other.wit
+
+   foo-bar-
+// ^^^^^^^^ variable.other.wit
+
+   0 1 12 42
+// ^ meta.number.integer.decimal.wit constant.numeric.value.wit
+//   ^ meta.number.integer.decimal.wit constant.numeric.value.wit
+//     ^^ meta.number.integer.decimal.wit constant.numeric.value.wit
+//        ^^ meta.number.integer.decimal.wit constant.numeric.value.wit
+
+
+/// Types /////////////////////////////////////////////////////////////////////
+
+   bool char f32 f64  s16 s32 s64 s8 string u8 u16 u32 u64
+// ^^^^ meta.type.wit storage.type.wit
+//      ^^^^ meta.type.wit storage.type.wit
+//           ^^^ meta.type.wit storage.type.wit
+//               ^^^ meta.type.wit storage.type.wit
+//                    ^^^ meta.type.wit storage.type.wit
+//                        ^^^ meta.type.wit storage.type.wit
+//                            ^^^ meta.type.wit storage.type.wit
+//                                ^^ meta.type.wit storage.type.wit
+//                                   ^^^^^^ meta.type.wit storage.type.wit
+//                                          ^^ meta.type.wit storage.type.wit
+//                                             ^^^ meta.type.wit storage.type.wit
+//                                                 ^^^ meta.type.wit storage.type.wit
+//                                                     ^^^ meta.type.wit storage.type.wit
+
+   list option result tuple
+// ^^^^ meta.type.wit storage.type.wit
+//      ^^^^^^ meta.type.wit storage.type.wit
+//             ^^^^^^ meta.type.wit storage.type.wit
+//                    ^^^^^ meta.type.wit storage.type.wit
+
+   list<u8>
+// ^^^^ meta.type.wit storage.type.wit
+//     ^ meta.type.wit meta.generic.wit punctuation.definition.generic.begin.wit
+//      ^^ meta.type.wit meta.generic.wit meta.type.wit storage.type.wit
+//        ^ meta.type.wit meta.generic.wit punctuation.definition.generic.end.wit
+//         ^ - meta.type - punctuation
+
+   option<bool>
+// ^^^^^^ meta.type.wit storage.type.wit
+//       ^ meta.type.wit meta.generic.wit punctuation.definition.generic.begin.wit
+//        ^^^^ meta.type.wit meta.generic.wit meta.type.wit storage.type.wit
+//            ^ meta.type.wit meta.generic.wit punctuation.definition.generic.end.wit
+//             ^ - meta.type - punctuation
+
+   tuple<u8> tuple<u8, string>
+// ^^^^^ meta.type.wit storage.type.wit
+//      ^ meta.type.wit meta.generic.wit punctuation.definition.generic.begin.wit
+//       ^^ meta.type.wit meta.generic.wit meta.type.wit storage.type.wit
+//         ^ meta.type.wit meta.generic.wit punctuation.definition.generic.end.wit
+//           ^^^^^ meta.type.wit storage.type.wit
+//                ^ meta.type.wit meta.generic.wit punctuation.definition.generic.begin.wit
+//                 ^^ meta.type.wit meta.generic.wit meta.type.wit storage.type.wit
+//                   ^ meta.type.wit meta.generic.wit punctuation.separator.sequence.wit
+//                     ^^^^^^ meta.type.wit meta.generic.wit meta.type.wit storage.type.wit
+//                           ^ meta.type.wit meta.generic.wit punctuation.definition.generic.end.wit
+
+   result<_, s64>
+// ^^^^^^ meta.type.wit storage.type.wit
+//       ^ meta.type.wit meta.generic.wit punctuation.definition.generic.begin.wit
+//        ^ meta.type.wit meta.generic.wit storage.type.discard.wit
+//         ^ meta.type.wit meta.generic.wit punctuation.separator.sequence.wit
+//           ^^^ meta.type.wit meta.generic.wit meta.type.wit storage.type.wit
+//              ^ meta.type.wit meta.generic.wit punctuation.definition.generic.end.wit
+
+
+/// Package Declarations //////////////////////////////////////////////////////
+
+%package
+// <- variable.other.wit
+//^^^^^^ variable.other.wit
+
+package-
+// <- variable.other.wit
+//^^^^^^ variable.other.wit
+
+package-name
+// <- variable.other.wit
+//^^^^^^^^^^ variable.other.wit
+
+package
+// <- meta.package.wit keyword.declaration.package.wit
+//^^^^^^ meta.package.wit
+//^^^^^ keyword.declaration.package.wit
+
+package foo:
+// <- meta.package.wit keyword.declaration.package.wit
+//^^^^^^^^^^ meta.package.wit
+//^^^^^ keyword.declaration.package.wit
+//      ^^^^ meta.path.wit
+//      ^^^ support.namespace.wit
+//         ^ punctuation.separator.path.wit
+
+package :bar
+// <- meta.package.wit keyword.declaration.package.wit
+//^^^^^^^^^^ meta.package.wit
+//^^^^^ keyword.declaration.package.wit
+//      ^^^^ meta.path.wit
+//      ^ punctuation.separator.path.wit
+//       ^^^ entity.name.namespace.package.wit
+
+package foo:bar
+// <- meta.package.wit keyword.declaration.package.wit
+//^^^^^^^^^^^^^ meta.package.wit
+//^^^^^ keyword.declaration.package.wit
+//      ^^^ support.namespace.wit
+//         ^ punctuation.separator.path.wit
+//          ^^^ entity.name.namespace.package.wit
+
+
+package foo:bar@1.0.0
+// <- meta.package.wit keyword.declaration.package.wit
+//^^^^^^^^^^^^^^^^^^^ meta.package.wit
+//      ^^^^^^^^^^^^^ meta.path.wit
+//^^^^^ keyword.declaration.package.wit
+//      ^^^ support.namespace.wit
+//         ^ punctuation.separator.path.wit
+//          ^^^ entity.name.namespace.package.wit
+//             ^ punctuation.separator.version.wit
+//              ^^^^^ constant.numeric.version.wit
+
+package foo:bar:baz/quux/more;
+// <- meta.package.wit keyword.declaration.package.wit
+//^^^^^^ meta.package.wit - meta.path
+//      ^^^^^^^^^^^^^^^^^^^^^ meta.package.wit meta.path.wit
+//^^^^^ keyword.declaration.package.wit
+//      ^^^ support.namespace.wit
+//         ^ punctuation.separator.path.wit
+//          ^^^ support.namespace.wit
+//             ^ punctuation.separator.path.wit
+//              ^^^ support.namespace.package.wit
+//                 ^ punctuation.separator.path.wit
+//                  ^^^^ support.namespace.package.wit
+//                      ^ punctuation.separator.path.wit
+//                       ^^^^ entity.name.namespace.package.wit
+//                           ^ punctuation.terminator.statement.wit
+
+
+/// Export Declarations ///////////////////////////////////////////////////////
+
+// 'export' id ';'
+export intf;
+// <- meta.statement.export.wit keyword.control.export.wit
+//^^^^^^^^^ meta.statement.export.wit
+//^^^^ keyword.control.export.wit
+//     ^^^^ meta.path.wit entity.name.interface.wit
+//         ^ punctuation.terminator.statement.wit
+
+// 'export' use-path ';'
+export ns1:ns2:ns3:pkg1/pkg2/intf@1.2.3;
+// <- meta.statement.export.wit keyword.control.export.wit
+//^^^^^ meta.statement.export.wit - meta.path
+//     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.export.wit meta.path.wit
+//^^^^ keyword.control.export.wit
+//     ^^^ support.namespace.wit
+//        ^ punctuation.separator.path.wit
+//         ^^^ support.namespace.wit
+//            ^ punctuation.separator.path.wit
+//             ^^^ support.namespace.wit
+//                ^ punctuation.separator.path.wit
+//                 ^^^^ support.namespace.package.wit
+//                     ^ punctuation.separator.path.wit
+//                      ^^^^ support.namespace.package.wit
+//                          ^ punctuation.separator.path.wit
+//                           ^^^^ entity.name.interface.wit
+//                               ^ punctuation.separator.version.wit
+//                                ^^^^^ constant.numeric.version.wit
+
+// 'export' id ':' 'interface' '{' interface-items* '}' ';'
+export intf: interface { };
+// <- meta.statement.export.wit keyword.control.export.wit
+//^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.export.wit
+//^^^^ keyword.control.export.wit
+//     ^^^^ meta.interface.identifier.wit entity.name.interface.wit
+//         ^ meta.interface.wit punctuation.separator.type.wit
+//          ^ meta.interface.wit - meta.block - keyword
+//           ^^^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//                    ^ meta.interface.wit - meta.block - keyword
+//                     ^^^ meta.interface.body.wit meta.block.wit
+//                        ^ punctuation.terminator.statement.wit - meta
+
+// 'export' id ':' 'func' '(' named-type-list ')' ';'
+export func: func(func: func) -> bool;
+// <- meta.statement.export.wit keyword.control.export.wit
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.export.wit
+//^^^^ keyword.control.export.wit
+//     ^^^^ meta.function.identifier.wit entity.name.function.wit
+//         ^ meta.function.wit punctuation.separator.type.wit
+//          ^ meta.function.wit - keyword
+//           ^^^^ meta.function.wit keyword.declaration.function.wit
+//               ^^^^^^^^^^^^ meta.function.parameters.wit
+//               ^ punctuation.section.parameters.begin.wit
+//                ^^^^ variable.parameter.wit
+//                    ^ punctuation.separator.type.wit
+//                      ^^^^ support.type.wit
+//                          ^ punctuation.section.parameters.end.wit
+//                           ^ meta.function.wit - keyword
+//                            ^^^^^^^ meta.function.return-type.wit
+//                            ^^ keyword.operator.arrow.wit
+//                               ^^^^ storage.type.wit
+//                                   ^ punctuation.terminator.statement.wit
+
+
+/// Import Declarations ///////////////////////////////////////////////////////
+
+// 'import' id ';'
+import intf;
+// <- meta.statement.import.wit keyword.control.import.wit
+//^^^^^^^^^ meta.statement.import.wit
+//^^^^ keyword.control.import.wit
+//     ^^^^ meta.path.wit entity.name.interface.wit
+//         ^ punctuation.terminator.statement.wit
+
+// 'import' use-path ';'
+import ns1:ns2:ns3:pkg1/pkg2/intf@1.2.3;
+// <- meta.statement.import.wit keyword.control.import.wit
+//^^^^^ meta.statement.import.wit - meta.path
+//     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.import.wit meta.path.wit
+//^^^^ keyword.control.import.wit
+//     ^^^ support.namespace.wit
+//        ^ punctuation.separator.path.wit
+//         ^^^ support.namespace.wit
+//            ^ punctuation.separator.path.wit
+//             ^^^ support.namespace.wit
+//                ^ punctuation.separator.path.wit
+//                 ^^^^ support.namespace.package.wit
+//                     ^ punctuation.separator.path.wit
+//                      ^^^^ support.namespace.package.wit
+//                          ^ punctuation.separator.path.wit
+//                           ^^^^ entity.name.interface.wit
+//                               ^ punctuation.separator.version.wit
+//                                ^^^^^ constant.numeric.version.wit
+
+// 'import' id ':' 'interface' '{' interface-items* '}' ';'
+import intf: interface { };
+// <- meta.statement.import.wit keyword.control.import.wit
+//^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.import.wit
+//^^^^ keyword.control.import.wit
+//     ^^^^ meta.interface.identifier.wit entity.name.interface.wit
+//         ^ meta.interface.wit punctuation.separator.type.wit
+//          ^ meta.interface.wit - meta.block - keyword
+//           ^^^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//                    ^ meta.interface.wit - meta.block - keyword
+//                     ^^^ meta.interface.body.wit meta.block.wit
+//                        ^ punctuation.terminator.statement.wit - meta
+
+// 'import' id ':' 'func' '(' named-type-list ')' ';'
+import func: func(foo: u32) -> bool;
+// <- meta.statement.import.wit keyword.control.import.wit
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.import.wit
+//^^^^ keyword.control.import.wit
+//     ^^^^ meta.function.identifier.wit entity.name.function.wit
+//         ^ meta.function.wit punctuation.separator.type.wit
+//          ^ meta.function.wit - keyword
+//           ^^^^ meta.function.wit keyword.declaration.function.wit
+//               ^^^^^^^^^^ meta.function.parameters.wit
+//                         ^ meta.function.wit - keyword
+//                          ^^^^^^^ meta.function.return-type.wit
+//                          ^^ keyword.operator.arrow.wit
+//                             ^^^^ storage.type.wit
+//                                 ^ punctuation.terminator.statement.wit
+
+
+/// Include Declarations //////////////////////////////////////////////////////
+
+include
+// <- meta.statement.include.wit keyword.control.include.wit
+//^^^^^ meta.statement.include.wit keyword.control.include.wit
+//     ^ meta.statement.include.path.wit - keyword - support
+
+include my-world-1
+// <- meta.statement.include.wit keyword.control.include.wit
+//^^^^^ meta.statement.include.wit keyword.control.include.wit
+//     ^ meta.statement.include.path.wit - meta.path - keyword - support
+//      ^^^^^^^^^^ meta.statement.include.path.wit meta.path.wit support.namespace.world.wit
+//                ^ meta.statement.include.path.wit - meta.path - support
+
+include wasi:io/my-world-2 with { a as a1, b as b1 };
+// <- meta.statement.include.wit keyword.control.include.wit
+//^^^^^ meta.statement.include.wit keyword.control.include.wit
+//     ^ meta.statement.include.path.wit - meta.path - keyword - support
+//      ^^^^^^^^^^^^^^^^^^ meta.statement.include.path.wit meta.path.wit
+//                        ^ meta.statement.include.path.wit - meta.path - support
+//                         ^^^^^ meta.statement.include.with.wit - meta.sequence
+//                              ^^^^^^^^^^^^^^^^^^^^ meta.statement.include.with.wit meta.sequence.list.names.wit
+//                                                  ^ - meta
+//      ^^^^ support.namespace.wit
+//          ^ punctuation.separator.path.wit
+//           ^^ support.namespace.package.wit
+//             ^ punctuation.separator.path.wit
+//              ^^^^^^^^^^ support.namespace.world.wit
+//                         ^^^^ keyword.other.with.wit
+//                              ^ punctuation.section.sequence.begin.wit
+//                                ^ variable.other.wit
+//                                  ^^ keyword.opearator.assignment.as.wit
+//                                     ^^ entity.name.type.wit
+//                                       ^ punctuation.separator.sequence.wit
+//                                         ^ variable.other.wit
+//                                           ^^ keyword.opearator.assignment.as.wit
+//                                              ^^ entity.name.type.wit
+//                                                 ^ punctuation.section.sequence.end.wit
+//                                                  ^ punctuation.terminator.statement.wit
+
+
+/// Top-level Use Declarations ////////////////////////////////////////////////
+
+%use
+// <- variable.other.wit
+//^^ variable.other.wit
+
+use
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - keyword
+
+use use
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - keyword
+//  ^^^ meta.statement.use.wit keyword.control.use.wit
+//     ^ meta.statement.use.path.wit - keyword
+
+use %use
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - keyword
+//  ^^^^ meta.statement.use.path.wit meta.path.wit support.interface.wit
+//      ^ meta.statement.use.path.wit - keyword
+
+use pkg
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path - keyword - support
+//  ^^^ meta.statement.use.path.wit meta.path.wit
+//     ^ meta.statement.use.path.wit - meta.path - support
+//^ keyword.control.use.wit
+//  ^^^ support.interface.wit
+
+use as as as
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path - support
+//  ^^ meta.statement.use.path.wit meta.path.wit support.interface.wit
+//    ^ meta.statement.use.path.wit - meta.path - support
+//     ^^ keyword.opearator.assignment.as.wit
+//        ^^ entity.name.interface.wit
+
+use wasi:http/types
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path
+//  ^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                 ^ meta.statement.use.path.wit - meta.path
+//  ^^^^ support.namespace.wit
+//      ^ punctuation.separator.path.wit
+//       ^^^^ support.namespace.package.wit
+//           ^ punctuation.separator.path.wit
+//            ^^^^^ support.interface.wit
+
+use wasi:http/types@1.0.0
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path
+//  ^^^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                       ^ meta.statement.use.path.wit - meta.path
+//  ^^^^ support.namespace.wit
+//      ^ punctuation.separator.path.wit
+//       ^^^^ support.namespace.package.wit
+//           ^ punctuation.separator.path.wit
+//            ^^^^^ support.interface.wit
+//                 ^ punctuation.separator.version.wit
+//                  ^^^^^ constant.numeric.version.wit
+
+use wasi:http/types@1.0.0 as
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path
+//  ^^^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                       ^ meta.statement.use.path.wit - meta.path
+//                        ^^^ meta.statement.use.as.wit - meta.path
+//  ^^^^ support.namespace.wit
+//      ^ punctuation.separator.path.wit
+//       ^^^^ support.namespace.package.wit
+//           ^ punctuation.separator.path.wit
+//            ^^^^^ support.interface.wit
+//                 ^ punctuation.separator.version.wit
+//                  ^^^^^ constant.numeric.version.wit
+//                        ^^ keyword.opearator.assignment.as.wit
+
+use wasi:http/types@1.0.0 as http-types1
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path
+//  ^^^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                       ^ meta.statement.use.path.wit - meta.path
+//                        ^^^^^^^^^^^^^^ meta.statement.use.as.wit - meta.path
+//^ keyword.control.use.wit
+//  ^^^^ support.namespace.wit
+//      ^ punctuation.separator.path.wit
+//       ^^^^ support.namespace.package.wit
+//           ^ punctuation.separator.path.wit
+//            ^^^^^ support.interface.wit
+//                 ^ punctuation.separator.version.wit
+//                  ^^^^^ constant.numeric.version.wit
+//                        ^^ keyword.opearator.assignment.as.wit
+//                           ^^^^^^^^^^^ entity.name.interface.wit
+
+use ns1:ns2:ns3:pkg1/pkg2/intf@1.2.3 as local;
+// <- meta.statement.use.wit keyword.control.use.wit
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit
+// ^ meta.statement.use.path.wit - meta.path
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                                  ^ meta.statement.use.path.wit - meta.path
+//                                   ^^^^^^^^ meta.statement.use.as.wit - meta.path
+//  ^^^ support.namespace.wit
+//     ^ punctuation.separator.path.wit
+//      ^^^ support.namespace.wit
+//         ^ punctuation.separator.path.wit
+//          ^^^ support.namespace.wit
+//             ^ punctuation.separator.path.wit
+//              ^^^^ support.namespace.package.wit
+//                  ^ punctuation.separator.path.wit
+//                   ^^^^ support.namespace.package.wit
+//                       ^ punctuation.separator.path.wit
+//                        ^^^^ support.interface.wit
+//                            ^ punctuation.separator.version.wit
+//                             ^^^^^ constant.numeric.version.wit
+//                                   ^^ keyword.opearator.assignment.as.wit
+//                                      ^^^^^ entity.name.interface.wit
+//                                           ^ punctuation.terminator.statement.wit
+
+
+/// Use Declarations //////////////////////////////////////////////////////////
+
+use an-interface.{a, list, of, names}
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - meta.path - support - keyword - variable
+//  ^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit support.interface.wit
+//              ^ meta.statement.use.path.wit meta.path.wit punctuation.separator.path.wit
+//               ^^^^^^^^^^^^^^^^^^^^ meta.statement.use.items.wit meta.sequence.list.names.wit
+//               ^ punctuation.section.sequence.begin.wit
+//                ^ variable.other.wit
+//                 ^ punctuation.separator.sequence.wit
+//                   ^^^^ variable.other.wit
+//                       ^ punctuation.separator.sequence.wit
+//                         ^^ variable.other.wit
+//                           ^ punctuation.separator.sequence.wit
+//                             ^^^^^ variable.other.wit
+//                                  ^ punctuation.section.sequence.end.wit
+
+
+use my:dependency/the-interface.{more, names as foo}
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - meta.path - support - keyword - variable
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                              ^^^^^^^^^^^^^^^^^^^^ meta.statement.use.items.wit meta.sequence.list.names.wit
+//  ^^ support.namespace.wit
+//    ^ punctuation.separator.path.wit
+//     ^^^^^^^^^^ support.namespace.package.wit
+//               ^ punctuation.separator.path.wit
+//                ^^^^^^^^^^^^^ support.interface.wit
+//                             ^ punctuation.separator.path.wit
+//                              ^ punctuation.section.sequence.begin.wit
+//                               ^^^^ variable.other.wit
+//                                   ^ punctuation.separator.sequence.wit
+//                                     ^^^^^ variable.other.wit
+//                                           ^^ keyword.opearator.assignment.as.wit
+//                                              ^^^ entity.name.type.wit
+//                                                 ^ punctuation.section.sequence.end.wit
+
+use wasi:clocks.wall-clock.{datetime}
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - meta.path - support - keyword - variable
+//  ^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                         ^^^^^^^^^^ meta.statement.use.items.wit meta.sequence.list.names.wit
+//  ^^^^ support.namespace.wit
+//      ^ punctuation.separator.path.wit
+//       ^^^^^^ support.interface.wit
+//             ^ punctuation.separator.path.wit
+//              ^^^^^^^^^^ support.interface.wit
+//                        ^ punctuation.separator.path.wit
+//                         ^ punctuation.section.sequence.begin.wit
+//                          ^^^^^^^^ variable.other.wit
+//                                  ^ punctuation.section.sequence.end.wit
+
+
+/// World Declarations ////////////////////////////////////////////////////////
+
+%world
+// <- variable.other.wit
+//^^^^ variable.other.wit
+
+world
+// <- meta.world.wit keyword.declaration.world.wit
+//^^^ meta.world.wit keyword.declaration.world.wit
+//   ^ meta.world.identifier.wit - keyword
+
+world world
+// <- meta.world.wit keyword.declaration.world.wit
+//^^^ meta.world.wit keyword.declaration.world.wit
+//   ^ meta.world.identifier.wit - keyword
+//    ^^^^^ meta.world.wit keyword.declaration.world.wit
+//         ^ meta.world.identifier.wit - keyword
+
+world %world
+// <- meta.world.wit keyword.declaration.world.wit
+//^^^ meta.world.wit keyword.declaration.world.wit
+//   ^^^^^^^ meta.world.identifier.wit
+//   ^ - keyword - entity
+//    ^^^^^^ entity.name.namespace.world.wit
+//          ^ - entity
+
+world { /**/ }
+// <- meta.world.wit keyword.declaration.world.wit
+//^^^ meta.world.wit keyword.declaration.world.wit
+//   ^ meta.world.identifier.wit
+//    ^^^^^^^^ meta.world.body.wit meta.block.wit
+//            ^ - meta
+//   ^ - keyword - entity - punctuation
+//    ^ punctuation.section.block.begin.wit
+//      ^^^^ comment.block.wit
+//           ^ punctuation.section.block.end.wit
+
+world my-world-1 { /**/ }
+// <- meta.world.wit keyword.declaration.world.wit
+//^^^ meta.world.wit keyword.declaration.world.wit
+//   ^^^^^^^^^^^ meta.world.identifier.wit
+//               ^^^^^^^^ meta.world.body.wit meta.block.wit
+//                       ^ - meta
+//   ^ - keyword - entity
+//    ^^^^^^^^^^ entity.name.namespace.world.wit
+//              ^ - entity
+//               ^ punctuation.section.block.begin.wit
+//                 ^^^^ comment.block.wit
+//                      ^ punctuation.section.block.end.wit
+
+world my-world-2 {
+// <- meta.world.wit keyword.declaration.world.wit
+//^^^ meta.world.wit keyword.declaration.world.wit
+//   ^^^^^^^^^^^^ meta.world.identifier.wit
+//               ^^ meta.world.body.wit meta.block.wit
+//   ^ - keyword - entity
+//    ^^^^^^^^^^ entity.name.namespace.world.wit
+//              ^ - entity
+//               ^ punctuation.section.block.begin.wit
+
+    /// # export items
+
+    // 'export' use-path ';'
+    export ns1:ns2:ns3:pkg1/pkg2/intf@1.2.3;
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.export.wit
+
+    // 'export' id ':' 'interface' '{' interface-items* '}' ';'
+    export id: interface { };
+//  ^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.export.wit
+
+    // 'export' id ':' 'func' '(' named-type-list ')' ';'
+    export id: func(foo: u32) -> bool;
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.export.wit
+
+    /// # import items
+
+    // 'import' use-path ';'
+    import ns1:ns2:ns3:pkg1/pkg2/intf@1.2.3;
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.import.wit
+
+    // 'import' id ':' 'interface' '{' interface-items* '}' ';'
+    import id: interface { };
+//  ^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.import.wit
+
+    // 'import' id ':' 'func' '(' named-type-list ')' ';'
+    import id: func(foo: u32) -> bool;
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.import.wit
+
+    /// # include items
+
+    // 'include' use-path 'with' '{' include-names-list '}'
+    include wasi:io/my-world-2 with { a as a1, b as b1 };
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.include
+
+    // use items
+
+    use my:dependency/the-interface.{more, names as foo};
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.statement.use
+
+    /// # typedef items
+
+    enum %enum { e1, e2 };
+//  ^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.enum
+//  ^^^^ keyword.declaration.enum.wit
+//       ^^^^^ entity.name.enum.wit
+
+    flags %flags { f1, f2 };
+//  ^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.flags
+//  ^^^^^ keyword.declaration.flags.wit
+//        ^^^^^^ entity.name.enum.flags.wit
+
+    record %record { field: bool };
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.record
+//  ^^^^^^ keyword.declaration.record.wit
+//         ^^^^^^^ entity.name.struct.record.wit
+
+    resource %resource { fun: func() -> bool };
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.resource
+//  ^^^^^^^^ keyword.declaration.resource.wit
+//           ^^^^^^^^^ entity.name.class.resource.wit
+
+    type id = tuple<u32>;
+//  ^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.type-alias
+//  ^^^^ keyword.declaration.type.wit
+//       ^^ entity.name.type.alias.wit
+
+    variant %variant { a1(u32), all };
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.variant
+//  ^^^^^^^ keyword.declaration.variant.wit
+//          ^^^^^^^^ entity.name.type.variant.wit
+}
+
+
+/// Interface Declarations ////////////////////////////////////////////////////
+
+%interface
+// <- variable.other.wit
+//^^^^^^^^ variable.other.wit
+
+interface
+// <- meta.interface.wit keyword.declaration.interface.wit
+//^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//       ^ meta.interface.identifier.wit - keyword
+
+interface interface
+// <- meta.interface.wit keyword.declaration.interface.wit
+//^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//       ^ meta.interface.identifier.wit - keyword
+//        ^^^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//                 ^ meta.interface.identifier.wit - keyword
+
+interface %interface
+// <- meta.interface.wit keyword.declaration.interface.wit
+//^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//       ^ meta.interface.identifier.wit - keyword - entity
+//        ^^^^^^^^^^ meta.interface.identifier.wit entity.name.interface.wit
+//                  ^ meta.interface.identifier.wit - entity
+
+interface math-2d
+// <- meta.interface.wit keyword.declaration.interface.wit
+//^^^^^^^ meta.interface.wit
+//       ^^^^^^^^^ meta.interface.identifier.wit
+//^^^^^^^ keyword.declaration.interface.wit
+//       ^ - keyword - entity
+//        ^^^^^^^ entity.name.interface.wit
+//               ^ - entity
+
+interface /**/ math-2d /**/ { /**/ }
+// <- meta.interface.wit keyword.declaration.interface.wit
+//^^^^^^^ meta.interface.wit
+//       ^^^^^^^^^^^^^^^^^^^ meta.interface.identifier.wit
+//                          ^^^^^^^^ meta.interface.body.wit meta.block.wit
+//                                  ^ - meta.interface
+//^^^^^^^ keyword.declaration.interface.wit
+//       ^ - comment - keyword
+//            ^ - comment - entity
+//             ^^^^^^^ entity.name.interface.wit
+//                    ^ - comment - entity
+//                     ^^^^ comment.block.wit
+//                          ^ punctuation.section.block.begin.wit
+//                            ^^^^ comment.block.wit
+//                                 ^ punctuation.section.block.end.wit
+
+interface types {
+// <- meta.interface.wit keyword.declaration.interface.wit
+//^^^^^^^ meta.interface.wit keyword.declaration.interface.wit
+//       ^^^^^^^ meta.interface.identifier.wit
+//              ^^ meta.interface.body.wit meta.block.wit
+//        ^^^^^ entity.name.interface.wit
+//              ^ punctuation.section.block.begin.wit
+
+  use wasi:clocks.wall-clock.{datetime};
+
+  record stat {
+//^^^^^^ meta.interface.body.wit meta.block.wit meta.record.wit keyword.declaration.record.wit
+//      ^^^^^^ meta.interface.body.wit meta.block.wit meta.record.identifier.wit
+//            ^^ meta.interface.body.wit meta.block.wit meta.record.body.wit meta.block.wit
+    size: u64,
+//  ^^^^ variable.other.wit
+//      ^ punctuation.separator.type.wit
+//        ^^^ storage.type.wit
+
+    mtime: datetime,
+//  ^^^^^ variable.other.wit
+//       ^ punctuation.separator.type.wit
+//         ^^^^^^^^ support.type.wit
+  }
+// <- meta.interface.body.wit meta.block.wit meta.record.body.wit meta.block.wit
+//^ meta.interface.body.wit meta.block.wit meta.record.body.wit meta.block.wit punctuation.section.block.end.wit
+// ^ meta.interface.body.wit meta.block.wit - meta.record
+
+  stat-file: func(path: string) -> result<stat>;
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.interface.body.wit meta.block.wit
+//^^^^^^^^^ entity.name.function.wit
+//         ^ punctuation.separator.type.wit
+//           ^^^^ keyword.declaration.function.wit
+//               ^ punctuation.section.parameters.begin.wit
+//                ^^^^ variable.parameter.wit
+//                    ^ punctuation.separator.type.wit
+//                      ^^^^^^ storage.type.wit
+//                            ^ punctuation.section.parameters.end.wit
+//                              ^^ keyword.operator.arrow.wit
+//                                 ^^^^^^ meta.type.wit storage.type.wit
+//                                       ^^^^^^ meta.type.wit meta.generic.wit
+//                                       ^ punctuation.definition.generic.begin.wit
+//                                        ^^^^ support.type.wit
+//                                            ^ punctuation.definition.generic.end.wit
+//                                             ^ punctuation.terminator.statement.wit
+
+}
+// <- meta.interface.body.wit meta.block.wit punctuation.section.block.end.wit
+ // <- - meta - punctuation
+
+
+/// Function Declarations /////////////////////////////////////////////////////
+
+func : func();
+// <- meta.function.identifier.wit entity.name.function.wit
+//^^ meta.function.identifier.wit
+//  ^^^^^^^ meta.function.wit
+//         ^^ meta.function.parameters.wit
+//           ^ - meta.function
+//^^ entity.name.function.wit
+//   ^ punctuation.separator.type.wit
+//     ^^^^ keyword.declaration.function.wit
+//         ^ punctuation.section.parameters.begin.wit
+//          ^ punctuation.section.parameters.end.wit
+//           ^ punctuation.terminator.statement.wit
+
+func : func ( a1: string, a2: tuple<u32>, : bool, char ) -> bool;
+// <- meta.function.identifier.wit entity.name.function.wit
+//^^ meta.function.identifier.wit
+//  ^^^^^^^^ meta.function.wit
+//          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.parameters.wit
+//                                                      ^ meta.function.wit
+//                                                       ^^^^^^^ meta.function.return-type.wit
+//                                                               ^ - meta.function
+//^^ entity.name.function.wit
+//   ^ punctuation.separator.type.wit
+//     ^^^^ keyword.declaration.function.wit
+//          ^ punctuation.section.parameters.begin.wit
+//            ^^ variable.parameter.wit
+//              ^ punctuation.separator.type.wit
+//                ^^^^^^ storage.type.wit
+//                      ^ punctuation.separator.sequence.wit
+//                        ^^ variable.parameter.wit
+//                          ^ punctuation.separator.type.wit
+//                            ^^^^^ meta.type.wit storage.type.wit
+//                                 ^^^^^ meta.type.wit meta.generic.wit
+//                                 ^ punctuation.definition.generic.begin.wit
+//                                  ^^^ storage.type.wit
+//                                     ^ punctuation.definition.generic.end.wit
+//                                      ^ punctuation.separator.sequence.wit
+//                                        ^ punctuation.separator.type.wit
+//                                          ^^^^ meta.type.wit storage.type.wit
+//                                              ^ punctuation.separator.sequence.wit
+//                                                ^^^^ variable.parameter.wit
+//                                                     ^ punctuation.section.parameters.end.wit
+//                                                       ^^ keyword.operator.arrow.wit
+//                                                          ^^^^ meta.type.wit storage.type.wit
+//                                                              ^ punctuation.terminator.statement.wit
+
+func : func ( a1: string, a2: tuple<u32> ) -> ( r1: u32, r2: foo );
+// <- meta.function.identifier.wit entity.name.function.wit
+//^^ meta.function.identifier.wit
+//  ^^^^^^^^ meta.function.wit
+//          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.parameters.wit
+//                                        ^ meta.function.wit
+//                                         ^^^ meta.function.return-type.wit
+//                                            ^^^^^^^^^^^^^^^^^^^^ meta.function.return-type.wit meta.sequence.tuple.wit
+//                                                                ^ - meta.function
+//^^ entity.name.function.wit
+//   ^ punctuation.separator.type.wit
+//     ^^^^ keyword.declaration.function.wit
+//          ^ punctuation.section.parameters.begin.wit
+//            ^^ variable.parameter.wit
+//              ^ punctuation.separator.type.wit
+//                ^^^^^^ storage.type.wit
+//                      ^ punctuation.separator.sequence.wit
+//                        ^^ variable.parameter.wit
+//                          ^ punctuation.separator.type.wit
+//                            ^^^^^ meta.type.wit storage.type.wit
+//                                 ^^^^^ meta.type.wit meta.generic.wit
+//                                 ^ punctuation.definition.generic.begin.wit
+//                                  ^^^ storage.type.wit
+//                                     ^ punctuation.definition.generic.end.wit
+//                                       ^ punctuation.section.parameters.end.wit
+//                                         ^^ keyword.operator.arrow.wit
+//                                            ^ punctuation.section.sequence.begin.wit
+//                                              ^^ entity.name.type.wit
+//                                                ^ punctuation.separator.type.wit
+//                                                  ^^^ meta.type.wit storage.type.wit
+//                                                     ^ punctuation.separator.sequence.wit
+//                                                       ^^ entity.name.type.wit
+//                                                         ^ punctuation.separator.type.wit
+//                                                           ^^^ meta.type.wit support.type.wit
+//                                                               ^ punctuation.section.sequence.end.wit
+//                                                                ^ punctuation.terminator.statement.wit
+
+
+/// Enum Declarations /////////////////////////////////////////////////////////
+
+%enum
+// <- variable.other.wit
+//^^^ variable.other.wit
+
+enum
+// <- meta.enum.wit keyword.declaration.enum.wit
+//^^ meta.enum.wit keyword.declaration.enum.wit
+//  ^ meta.enum.identifier.wit - meta.path - keyword
+
+enum enum
+// <- meta.enum.wit keyword.declaration.enum.wit
+//^^ meta.enum.wit keyword.declaration.enum.wit
+//  ^ meta.enum.identifier.wit - meta.path - keyword
+//   ^^^^ meta.enum.wit keyword.declaration.enum.wit
+//       ^ meta.enum.identifier.wit - meta.path - keyword
+
+enum %enum
+// <- meta.enum.wit keyword.declaration.enum.wit
+//^^ meta.enum.wit keyword.declaration.enum.wit
+//  ^ meta.enum.identifier.wit - entity - keyword
+//   ^^^^^ meta.enum.identifier.wit entity.name.enum.wit
+//        ^ meta.enum.identifier.wit - entity
+
+enum name {
+// <- meta.enum.wit keyword.declaration.enum.wit
+//^^ meta.enum.wit keyword.declaration.enum.wit
+//  ^ meta.enum.identifier.wit - entity - keyword
+//   ^^^^ meta.enum.identifier.wit entity.name.enum.wit
+//       ^ meta.enum.identifier.wit - entity
+//        ^^ meta.enum.body.wit meta.block.wit
+//        ^ punctuation.section.block.begin.wit
+    lego,
+// ^^^^^^^ meta.enum.body.wit meta.block.wit
+//  ^^^^ entity.name.constant.wit
+//      ^ punctuation.separator.sequence.wit
+    marvel-superhero,
+// ^^^^^^^^^^^^^^^^^^^ meta.enum.body.wit meta.block.wit
+//  ^^^^^^^^^^^^^^^^ entity.name.constant.wit
+//                  ^ punctuation.separator.sequence.wit
+}
+// <- meta.enum.body.wit meta.block.wit punctuation.section.block.end.wit
+ // <- - meta - punctuation
+
+
+/// Flags Declarations ////////////////////////////////////////////////////////
+
+%flags
+// <- variable.other.wit
+//^^^^ variable.other.wit
+
+flags
+// <- meta.flags.wit keyword.declaration.flags.wit
+//^^^ meta.flags.wit keyword.declaration.flags.wit
+//   ^ meta.flags.identifier.wit - meta.path - keyword
+
+flags flags
+// <- meta.flags.wit keyword.declaration.flags.wit
+//^^^ meta.flags.wit keyword.declaration.flags.wit
+//   ^ meta.flags.identifier.wit - meta.path - keyword
+//    ^^^^^ meta.flags.wit keyword.declaration.flags.wit
+//         ^ meta.flags.identifier.wit - meta.path - keyword
+
+flags %flags
+// <- meta.flags.wit keyword.declaration.flags.wit
+//^^^ meta.flags.wit keyword.declaration.flags.wit
+//   ^ meta.flags.identifier.wit - entity - keyword
+//    ^^^^^^ meta.flags.identifier.wit entity.name.enum.flags.wit
+//          ^ meta.flags.identifier.wit - entity
+
+flags name {
+// <- meta.flags.wit keyword.declaration.flags.wit
+//^^^ meta.flags.wit keyword.declaration.flags.wit
+//   ^ meta.flags.identifier.wit - entity - keyword
+//    ^^^^ meta.flags.identifier.wit entity.name.enum.flags.wit
+//        ^ meta.flags.identifier.wit - entity
+//         ^^ meta.flags.body.wit meta.block.wit
+//         ^ punctuation.section.block.begin.wit
+    lego,
+// ^^^^^^^ meta.flags.body.wit meta.block.wit
+//  ^^^^ entity.name.constant.wit
+//      ^ punctuation.separator.sequence.wit
+    marvel-superhero,
+// ^^^^^^^^^^^^^^^^^^^ meta.flags.body.wit meta.block.wit
+//  ^^^^^^^^^^^^^^^^ entity.name.constant.wit
+//                  ^ punctuation.separator.sequence.wit
+}
+// <- meta.flags.body.wit meta.block.wit punctuation.section.block.end.wit
+ // <- - meta - punctuation
+
+
+/// Record Declarations ///////////////////////////////////////////////////////
+
+%record
+// <- variable.other.wit
+//^^^^^ variable.other.wit
+
+record
+// <- meta.record.wit keyword.declaration.record.wit
+//^^^^ meta.record.wit keyword.declaration.record.wit
+//    ^ meta.record.identifier.wit - keyword
+
+record record
+// <- meta.record.wit keyword.declaration.record.wit
+//^^^^ meta.record.wit keyword.declaration.record.wit
+//    ^ meta.record.identifier.wit - keyword
+//     ^^^^^^ meta.record.wit keyword.declaration.record.wit
+
+record %record
+// <- meta.record.wit keyword.declaration.record.wit
+//^^^^ meta.record.wit keyword.declaration.record.wit
+//    ^ meta.record.identifier.wit - keyword
+//     ^^^^^^^ meta.record.identifier.wit entity.name.struct.record.wit
+
+record name
+// <- meta.record.wit keyword.declaration.record.wit
+//^^^^ meta.record.wit keyword.declaration.record.wit
+//    ^ meta.record.identifier.wit - meta.path - entity - keyword
+//     ^^^^ meta.record.identifier.wit entity.name.struct.record.wit
+//         ^ meta.record.identifier.wit - meta.path - entity
+
+record name { id: u32, has-lego-action-figure: bool, }
+// <- meta.record.wit keyword.declaration.record.wit
+//^^^^ meta.record.wit keyword.declaration.record.wit
+//    ^ meta.record.identifier.wit - meta.path - entity - keyword
+//     ^^^^ meta.record.identifier.wit entity.name.struct.record.wit
+//         ^ meta.record.identifier.wit - meta.path - entity
+//          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.record.body.wit meta.block.wit
+//          ^ punctuation.section.block.begin.wit
+//            ^^^^^^^ meta.declaration.variable.wit
+//            ^^ variable.other.wit
+//              ^ punctuation.separator.type.wit
+//                ^^^ meta.type.wit storage.type.wit
+//                   ^ punctuation.separator.sequence.wit
+//                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.declaration.variable.wit
+//                     ^^^^^^^^^^^^^^^^^^^^^^ variable.other.wit
+//                                           ^ punctuation.separator.type.wit
+//                                             ^^^^ meta.type.wit storage.type.wit
+//                                                 ^ punctuation.separator.sequence.wit
+//                                                   ^ punctuation.section.block.end.wit
+
+
+/// Resource Declarations /////////////////////////////////////////////////////
+
+resource
+// <- meta.resource.wit keyword.declaration.resource.wit
+//^^^^^^ meta.resource.wit keyword.declaration.resource.wit
+//      ^ meta.resource.identifier.wit - meta.path - entity - keyword
+
+resource blob
+// <- meta.resource.wit keyword.declaration.resource.wit
+//^^^^^^ meta.resource.wit keyword.declaration.resource.wit
+//      ^ meta.resource.identifier.wit - meta.path - entity - keyword
+//       ^^^^ meta.resource.identifier.wit entity.name.class.resource.wit
+//           ^ meta.resource.identifier.wit - meta.path - entity - keyword
+
+resource blob;
+// <- meta.resource.wit keyword.declaration.resource.wit
+//^^^^^^ meta.resource.wit keyword.declaration.resource.wit
+//      ^ meta.resource.identifier.wit - meta.path - entity - keyword
+//       ^^^^ meta.resource.identifier.wit entity.name.class.resource.wit
+//           ^ punctuation.terminator.statement.wit - meta
+
+resource blob {
+// <- meta.resource.wit keyword.declaration.resource.wit
+//^^^^^^ meta.resource.wit keyword.declaration.resource.wit
+//      ^ meta.resource.identifier.wit - meta.path - entity - keyword
+//       ^^^^ meta.resource.identifier.wit entity.name.class.resource.wit
+//           ^ meta.resource.identifier.wit - meta.path - entity - keyword
+//            ^^ meta.resource.body.wit meta.block.wit
+//            ^ punctuation.section.block.begin.wit
+
+    constructor(init: list<u8>) ;
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit
+//  ^^^^^^^^^^^ meta.function.identifier.wit entity.name.function.constructor.wit
+//             ^^^^^^^^^^^^^^^^ meta.function.parameters.wit
+//                             ^^^ - meta.function
+//             ^ punctuation.section.parameters.begin.wit
+//              ^^^^ variable.parameter.wit
+//                  ^ punctuation.separator.type.wit
+//                    ^^^^ meta.type.wit - meta.generic
+//                        ^^^^ meta.type.wit meta.generic.wit
+//                    ^^^^ storage.type.wit
+//                        ^ punctuation.definition.generic.begin.wit
+//                         ^^ storage.type.wit
+//                           ^ punctuation.definition.generic.end.wit
+//                            ^ punctuation.section.parameters.end.wit
+//                              ^ punctuation.terminator.statement.wit
+
+    write: func(bytes: list<u8>);
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit meta.function
+//  ^^^^^ entity.name.function.wit
+
+    read: func(n: u32) -> list<u8>;
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit meta.function
+//  ^^^^ entity.name.function.wit
+
+    merge: static func(lhs: borrow<blob>, rhs: borrow<blob>) -> blob;
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit meta.function
+//  ^^^^^ entity.name.function.wit
+
+}
+// <- meta.resource.body.wit meta.block.wit punctuation.section.block.end.wit
+
+
+/// Type Alias Declarations ///////////////////////////////////////////////////
+
+type my-awesome-u32 = u32;
+// <- meta.type-alias.wit keyword.declaration.type.wit
+//^^ meta.type-alias.wit keyword.declaration.type.wit
+//  ^ meta.type-alias.identifier.wit - keyword - entity
+//   ^^^^^^^^^^^^^^ meta.type-alias.identifier.wit entity.name.type.alias.wit
+//                 ^ meta.type-alias.identifier.wit - entity - keyword
+//                  ^ meta.type-alias.wit keyword.operator.assignment.wit
+//                   ^ meta.type-alias.wit - storage
+//                    ^^^ meta.type-alias.wit storage.type.wit
+//                       ^ punctuation.terminator.statement.wit - meta
+
+type my-complicated-tuple = tuple<u32, s32, string>;
+// <- meta.type-alias.wit keyword.declaration.type.wit
+//^^ meta.type-alias.wit keyword.declaration.type.wit
+//  ^ meta.type-alias.identifier.wit - keyword - entity
+//   ^^^^^^^^^^^^^^^^^^^^ meta.type-alias.identifier.wit entity.name.type.alias.wit
+//                       ^ meta.type-alias.identifier.wit - entity - keyword
+//                        ^ meta.type-alias.wit keyword.operator.assignment.wit
+//                         ^ meta.type-alias.wit - storage
+//                          ^^^^^ meta.type-alias.wit meta.type.wit storage.type.wit
+//                               ^^^^^^^^^^^^^^^^^^ meta.type-alias.wit meta.type.wit meta.generic.wit
+//                               ^ punctuation.definition.generic.begin.wit
+//                                ^^^ storage.type.wit
+//                                   ^ punctuation.separator.sequence.wit
+//                                     ^^^ storage.type.wit
+//                                        ^ punctuation.separator.sequence.wit
+//                                          ^^^^^^ storage.type.wit
+//                                                ^ punctuation.definition.generic.end.wit
+//                                                 ^ punctuation.terminator.statement.wit - meta
+
+
+/// Variant Declarations //////////////////////////////////////////////////////
+
+%variant
+// <- variable.other.wit
+//^^^^^^ variable.other.wit
+
+variant
+// <- meta.variant.wit keyword.declaration.variant.wit
+//^^^^^ meta.variant.wit keyword.declaration.variant.wit
+//     ^ meta.variant.identifier.wit - keyword
+
+variant variant
+// <- meta.variant.wit keyword.declaration.variant.wit
+//^^^^^ meta.variant.wit keyword.declaration.variant.wit
+//     ^ meta.variant.identifier.wit - keyword
+//      ^^^^^^^ meta.variant.wit keyword.declaration.variant.wit
+
+variant %variant
+// <- meta.variant.wit keyword.declaration.variant.wit
+//^^^^^ meta.variant.wit keyword.declaration.variant.wit
+//     ^ meta.variant.identifier.wit - keyword
+//      ^^^^^^^^ meta.variant.identifier.wit entity.name.type.variant.wit
+
+variant name
+// <- meta.variant.wit keyword.declaration.variant.wit
+//^^^^^ meta.variant.wit keyword.declaration.variant.wit
+//     ^ meta.variant.identifier.wit - entity - keyword
+//      ^^^^ meta.variant.identifier.wit entity.name.type.variant.wit
+//          ^ meta.variant.identifier.wit - entity - keyword
+
+variant name { id, id(u32), id(list<string>) }
+// <- meta.variant.wit keyword.declaration.variant.wit
+//^^^^^ meta.variant.wit keyword.declaration.variant.wit
+//     ^ meta.variant.identifier.wit - entity - keyword
+//      ^^^^ meta.variant.identifier.wit entity.name.type.variant.wit
+//          ^ meta.variant.identifier.wit - entity - keyword
+//           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.variant.body.wit meta.block.wit
+//           ^ punctuation.section.block.begin.wit
+//             ^^ meta.tag.wit entity.name.constant.wit
+//               ^ punctuation.separator.sequence.wit
+//                 ^^ meta.tag.wit entity.name.constant.wit
+//                   ^^^^^ meta.tag.parameters.wit
+//                   ^ punctuation.definition.parameters.begin.wit
+//                    ^^^ meta.type.wit storage.type.wit
+//                       ^ punctuation.definition.parameters.end.wit
+//                        ^ punctuation.separator.sequence.wit
+//                          ^^ meta.tag.wit entity.name.constant.wit
+//                            ^^^^^^^^^^^^^^ meta.tag.parameters.wit
+//                            ^ punctuation.definition.parameters.begin.wit
+//                             ^^^^ meta.type.wit storage.type.wit
+//                                 ^^^^^^^^ meta.type.wit meta.generic.wit
+//                                 ^ punctuation.definition.generic.begin.wit
+//                                  ^^^^^^ meta.type.wit storage.type.wit
+//                                        ^ punctuation.definition.generic.end.wit
+//                                         ^ punctuation.definition.parameters.end.wit
+//                                           ^ punctuation.section.block.end.wit

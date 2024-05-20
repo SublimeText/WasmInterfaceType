@@ -1,0 +1,95 @@
+{
+	"scope": "source.wit",
+	"completions": [
+		{
+			"trigger": "u8",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "u16",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "u32",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "u64",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "s8",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "s16",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "s32",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "s64",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "f32",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "f64",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "char",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "bool",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "string",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "tuple",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "list",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "option",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "result",
+			"kind": "type",
+			"details": "built-in type",
+		},
+		{
+			"trigger": "borrow",
+			"kind": "type",
+			"details": "built-in type",
+		},
+	]
+}

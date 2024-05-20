@@ -1,0 +1,26 @@
+package example:graphics@1.0.0
+
+world my-world {
+  import host: interface {
+    log: func(param: string);
+  }
+
+  export run: func();
+}
+
+interface math-2d {
+
+    /// Represents a 2D point.
+    ///
+    /// # Notes
+    /// 1. Not to be confused with a _circle_.
+    /// 2.
+    record point {
+        x: float32,
+        y: float32
+    }
+
+    export move: func(p: point, dx: float32, dy: float32) -> point
+}
+
+
