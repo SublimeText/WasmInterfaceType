@@ -76,15 +76,18 @@ contexts:
 
   block-comments:
     - match: /\*\*+(?!/)
-      scope: comment.block.documentation.wit punctuation.definition.comment.begin.wit
-      embed: scope:text.html.markdown#indented-markdown
-      embed_scope: comment.block.documentation.wit
-      escape: \*+/
-      escape_captures:
-        0: comment.block.documentation.wit punctuation.definition.comment.end.wit
+      scope: punctuation.definition.comment.begin.wit
+      push: docblock-comment-body
     - match: /\*
       scope: punctuation.definition.comment.begin.wit
       push: block-comment-body
+
+  docblock-comment-body:
+    - meta_include_prototype: false
+    - meta_scope: comment.block.documentation.wit
+    - match: \*+/
+      scope: punctuation.definition.comment.end.wit
+      pop: 1
 
   block-comment-body:
     - meta_include_prototype: false
@@ -94,16 +97,18 @@ contexts:
       pop: 1
 
   line-comments:
-    - match: ///+
-      scope: comment.line.documentation.wit punctuation.definition.comment.wit
-      embed: scope:text.html.markdown#indented-markdown
-      embed_scope: comment.line.documentation.wit
-      escape: $\n?
-      escape_captures:
-        0: comment.line.documentation.wit
+    - match: ///
+      scope: punctuation.definition.comment.wit
+      push: docline-comment-body
     - match: //
       scope: punctuation.definition.comment.wit
       push: line-comment-body
+
+  docline-comment-body:
+    - meta_include_prototype: false
+    - meta_scope: comment.line.documentation.wit
+    - match: $\n?
+      pop: 1
 
   line-comment-body:
     - meta_include_prototype: false

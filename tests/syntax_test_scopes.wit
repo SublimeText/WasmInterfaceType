@@ -38,16 +38,16 @@
 // ^^^ comment.block.documentation.wit punctuation.definition.comment.begin.wit
 //    ^ comment.block.documentation.wit - punctuation
    # Header
-// ^^^^^^^^^ comment.block.documentation.wit markup.heading.1.markdown
+// ^^^^^^^^^ comment.block.documentation.wit
 
    > block quote
-// ^^^^^^^^^^^^^^ comment.block.documentation.wit markup.quote.markdown
+// ^^^^^^^^^^^^^^ comment.block.documentation.wit
 
    ```python
-// ^^^^^^^^^^ comment.block.documentation.wit meta.code-fence.definition.begin
+// ^^^^^^^^^^ comment.block.documentation.wit
    import foo
    ```
-// ^^^ comment.block.documentation.wit meta.code-fence.definition.end punctuation.definition.raw.code-fence
+// ^^^ comment.block.documentation.wit
    */
 // <- comment.block.documentation.wit
 //^ comment.block.documentation.wit - punctuation
