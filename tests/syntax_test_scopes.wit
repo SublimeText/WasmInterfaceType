@@ -574,6 +574,25 @@ use wasi:clocks.wall-clock.{datetime}
 //                          ^^^^^^^^ variable.other.wit
 //                                  ^ punctuation.section.sequence.end.wit
 
+use wasi:io/poll@0.2.0.{pollable};
+// <- meta.statement.use.wit keyword.control.use.wit
+//^ meta.statement.use.wit keyword.control.use.wit
+// ^ meta.statement.use.path.wit - meta.path - support - keyword - variable
+//  ^^^^^^^^^^^^^^^^^^^ meta.statement.use.path.wit meta.path.wit
+//                     ^^^^^^^^^^ meta.statement.use.items.wit meta.sequence.list.names.wit
+//  ^^^^ support.namespace.wit
+//      ^ punctuation.separator.path.wit
+//       ^^ support.namespace.package.wit
+//         ^ punctuation.separator.path.wit
+//          ^^^^ support.interface.wit
+//              ^ punctuation.separator.version.wit
+//               ^^^^^ constant.numeric.version.wit
+//                    ^ punctuation.separator.path.wit
+//                     ^ punctuation.section.sequence.begin.wit
+//                      ^^^^^^^^ variable.other.wit
+//                              ^ punctuation.section.sequence.end.wit
+//                               ^ punctuation.terminator.statement.wit
+
 
 /// World Declarations ////////////////////////////////////////////////////////
 

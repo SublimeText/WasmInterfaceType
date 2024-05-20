@@ -328,12 +328,13 @@ contexts:
         1: support.interface.wit
         2: punctuation.separator.path.wit
     # used interface (top-level use item, only)
-    - match: ({{id}})(?:(@)({{semver}}))?
+    - match: ({{id}})(?:(@)({{semver}})(\.)?)?
       scope: meta.path.wit
       captures:
         1: support.interface.wit
         2: punctuation.separator.version.wit
         3: constant.numeric.version.wit
+        4: punctuation.separator.path.wit
       pop: 1
     - include: else-pop
 
