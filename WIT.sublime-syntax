@@ -18,8 +18,8 @@ variables:
 
   break: (?!{{id_char}})
 
-  # a lazy semver pattern
-  semver: '[[:alnum:]_.+-]*[[:alnum:]_]'
+  # semver pattern <major> . <minor> [ . <micro> [ . <pre> ] ]
+  semver: '[[:digit:]]+(\.)[[:digit:]]+(?:(\.)[[:digit:]]+(?:([-+])[[:alnum:]_.+-]*[[:alnum:]])?)?'
 
   keyword: |-
     (?x: export | import | include | package | type | use | enum | flags
@@ -60,6 +60,7 @@ contexts:
     - include: variant-declarations
 
     # expressions
+    - include: annotations
     - include: delimiters
     - include: operators
     - include: terminators
@@ -111,6 +112,33 @@ contexts:
     - match: $\n?
       pop: 1
 
+###[ ANNOTATIONS ]#############################################################
+
+  annotations:
+    - match: (@){{id}}
+      scope: meta.annotation.identifier.wit variable.annotation.wit
+      captures:
+        1: punctuation.definition.variable.wit
+      push: annotation-argument-list
+
+  annotation-argument-list:
+    - meta_content_scope: meta.annotation.identifier.wit
+    - match: \(
+      scope: punctuation.section.arguments.begin.wit
+      set: annotation-argument-list-body
+
+  annotation-argument-list-body:
+    - meta_scope: meta.annotation.arguments.wit
+    - match: \)
+      scope: punctuation.section.arguments.end.wit
+      pop: 1
+    - match: '{{id}}'
+      scope: variable.parameter.wit
+    - include: delimiters
+    - include: numbers
+    - include: operators
+    - include: type-annotations
+
 ###[ PACKAGE DECLARATIONS ]####################################################
 
   package-declarations:
@@ -130,6 +158,9 @@ contexts:
         2: entity.name.namespace.package.wit
         3: punctuation.separator.version.wit
         4: constant.numeric.version.wit
+        5: punctuation.separator.decimal.wit
+        6: punctuation.separator.decimal.wit
+        7: punctuation.separator.decimal.wit
       pop: 1
     - include: else-pop
 
@@ -260,6 +291,9 @@ contexts:
         1: entity.name.interface.wit
         2: punctuation.separator.version.wit
         3: constant.numeric.version.wit
+        4: punctuation.separator.decimal.wit
+        5: punctuation.separator.decimal.wit
+        6: punctuation.separator.decimal.wit
       pop: 1
     - include: immediately-pop
 
@@ -329,7 +363,10 @@ contexts:
         1: support.interface.wit
         2: punctuation.separator.version.wit
         3: constant.numeric.version.wit
-        4: punctuation.separator.path.wit
+        4: punctuation.separator.decimal.wit
+        5: punctuation.separator.decimal.wit
+        6: punctuation.separator.decimal.wit
+        7: punctuation.separator.path.wit
       pop: 1
     - include: else-pop
 
@@ -551,6 +588,7 @@ contexts:
     - match: \}
       scope: punctuation.section.block.end.wit
       pop: 1
+    - include: annotations
     - include: terminators
     - include: function-declarations
 
@@ -726,6 +764,12 @@ contexts:
         2: punctuation.separator.path.wit
 
   numbers:
+    - match: '{{semver}}'
+      scope: constant.numeric.version.wit
+      captures:
+        1: punctuation.separator.decimal.wit
+        2: punctuation.separator.decimal.wit
+        3: punctuation.separator.decimal.wit
     - match: \d+
       scope: meta.number.integer.decimal.wit constant.numeric.value.wit
 
