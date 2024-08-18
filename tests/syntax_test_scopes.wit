@@ -92,6 +92,11 @@
 //     ^^ meta.number.integer.decimal.wit constant.numeric.value.wit
 //        ^^ meta.number.integer.decimal.wit constant.numeric.value.wit
 
+   1.0.4-alpha.2
+// ^^^^^^^^^^^^^ constant.numeric.version.wit
+//  ^ punctuation.separator.decimal.wit
+//    ^ punctuation.separator.decimal.wit
+//      ^ punctuation.separator.decimal.wit
 
 /// Types /////////////////////////////////////////////////////////////////////
 
@@ -205,6 +210,8 @@ package foo:bar@1.0.0
 //          ^^^ entity.name.namespace.package.wit
 //             ^ punctuation.separator.version.wit
 //              ^^^^^ constant.numeric.version.wit
+//               ^ punctuation.separator.decimal.wit
+//                 ^ punctuation.separator.decimal.wit
 
 package foo:bar:baz/quux/more;
 // <- meta.package.wit keyword.declaration.package.wit
@@ -317,6 +324,8 @@ import ns1:ns2:ns3:pkg1/pkg2/intf@1.2.3;
 //                           ^^^^ entity.name.interface.wit
 //                               ^ punctuation.separator.version.wit
 //                                ^^^^^ constant.numeric.version.wit
+//                                 ^ punctuation.separator.decimal.wit
+//                                   ^ punctuation.separator.decimal.wit
 
 // 'import' id ':' 'interface' '{' interface-items* '}' ';'
 import intf: interface { };
@@ -457,6 +466,8 @@ use wasi:http/types@1.0.0
 //            ^^^^^ support.interface.wit
 //                 ^ punctuation.separator.version.wit
 //                  ^^^^^ constant.numeric.version.wit
+//                   ^ punctuation.separator.decimal.wit
+//                     ^ punctuation.separator.decimal.wit
 
 use wasi:http/types@1.0.0 as
 // <- meta.statement.use.wit keyword.control.use.wit
@@ -472,6 +483,8 @@ use wasi:http/types@1.0.0 as
 //            ^^^^^ support.interface.wit
 //                 ^ punctuation.separator.version.wit
 //                  ^^^^^ constant.numeric.version.wit
+//                   ^ punctuation.separator.decimal.wit
+//                     ^ punctuation.separator.decimal.wit
 //                        ^^ keyword.opearator.assignment.as.wit
 
 use wasi:http/types@1.0.0 as http-types1
@@ -489,6 +502,8 @@ use wasi:http/types@1.0.0 as http-types1
 //            ^^^^^ support.interface.wit
 //                 ^ punctuation.separator.version.wit
 //                  ^^^^^ constant.numeric.version.wit
+//                   ^ punctuation.separator.decimal.wit
+//                     ^ punctuation.separator.decimal.wit
 //                        ^^ keyword.opearator.assignment.as.wit
 //                           ^^^^^^^^^^^ entity.name.interface.wit
 
@@ -587,6 +602,8 @@ use wasi:io/poll@0.2.0.{pollable};
 //          ^^^^ support.interface.wit
 //              ^ punctuation.separator.version.wit
 //               ^^^^^ constant.numeric.version.wit
+//                ^ punctuation.separator.decimal.wit
+//                  ^ punctuation.separator.decimal.wit
 //                    ^ punctuation.separator.path.wit
 //                     ^ punctuation.section.sequence.begin.wit
 //                      ^^^^^^^^ variable.other.wit
@@ -715,11 +732,46 @@ world my-world-2 {
 //  ^^^^^^^^ keyword.declaration.resource.wit
 //           ^^^^^^^^^ entity.name.class.resource.wit
 
+    resource %resource-body {
+      @since(version = 0.2.0)
+//    ^^^^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit
+//    ^^^^^^ meta.annotation.identifier.wit
+//          ^^^^^^^^^^^^^^^^^ meta.annotation.arguments.wit
+//    ^ punctuation.definition.variable.wit
+//    ^^^^^^ variable.annotation.wit
+//          ^ punctuation.section.arguments.begin.wit
+//           ^^^^^^^ variable.parameter.wit
+//                   ^ keyword.operator.assignment.wit
+//                     ^^^^^ constant.numeric.version.wit
+//                      ^ punctuation.separator.decimal.wit
+//                        ^ punctuation.separator.decimal.wit
+//                          ^ punctuation.section.arguments.end.wit
+      fun: func() -> bool;
+//    ^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit
+//    ^^^ meta.function.identifier.wit entity.name.function.wit
+//       ^^^^^^ meta.function.wit
+//             ^^ meta.function.parameters.wit
+//               ^ meta.function.wit
+//                ^^^^^^^ meta.function.return-type.wit
+   }
+
     type id = tuple<u32>;
 //  ^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.type-alias
 //  ^^^^ keyword.declaration.type.wit
 //       ^^ entity.name.type.alias.wit
 
+    @since(version = 0.2.0)
+//  ^^^^^^ meta.annotation.identifier.wit
+//        ^^^^^^^^^^^^^^^^^ meta.annotation.arguments.wit
+//  ^ punctuation.definition.variable.wit
+//  ^^^^^^ variable.annotation.wit
+//        ^ punctuation.section.arguments.begin.wit
+//         ^^^^^^^ variable.parameter.wit
+//                 ^ keyword.operator.assignment.wit
+//                   ^^^^^ constant.numeric.version.wit
+//                    ^ punctuation.separator.decimal.wit
+//                      ^ punctuation.separator.decimal.wit
+//                        ^ punctuation.section.arguments.end.wit
     variant %variant { a1(u32), all };
 //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.world.body.wit meta.block.wit meta.variant
 //  ^^^^^^^ keyword.declaration.variant.wit
