@@ -252,13 +252,14 @@ contexts:
 
   import-export-identifier:
     # functions
-    - match: ({{id}})(\s*(:)\s*(?:(static)\s+)?(func{{break}}))
+    - match: ({{id}})(\s*(:)\s*(?:(static)\s+)?(?:(async)\s+)?(func{{break}}))
       captures:
         1: meta.function.identifier.wit entity.name.function.wit
         2: meta.function.wit
         3: punctuation.separator.type.wit
         4: storage.modifier.static.wit
-        5: keyword.declaration.function.wit
+        5: keyword.declaration.async.wit
+        6: keyword.declaration.function.wit
       push:
         - function-return-type
         - function-parameter-list
@@ -468,13 +469,14 @@ contexts:
         - function-meta
         - function-parameter-list
     # normal function definition
-    - match: ({{id}})(\s*(:)\s*(?:(static)\s+)?(func{{break}}))
+    - match: ({{id}})(\s*(:)\s*(?:(static)\s+)?(?:(async)\s+)?(func{{break}}))
       captures:
         1: meta.function.identifier.wit entity.name.function.wit
         2: meta.function.wit
         3: punctuation.separator.type.wit
         4: storage.modifier.static.wit
-        5: keyword.declaration.function.wit
+        5: keyword.declaration.async.wit
+        6: keyword.declaration.function.wit
       push:
         - function-return-type
         - function-parameter-list
