@@ -294,6 +294,32 @@ export func: func(func: func) -> bool;
 //                               ^^^^ storage.type.wit
 //                                   ^ punctuation.terminator.statement.wit
 
+export handle: async func(request: request) -> result<response, error-code>;
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.statement.export.wit
+//^^^^ keyword.control.export.wit
+//     ^^^^^^ meta.function.identifier.wit entity.name.function.wit
+//           ^^^^^^^^^^^^ meta.function.wit
+//           ^ punctuation.separator.type.wit
+//             ^^^^^ keyword.declaration.async.wit
+//                   ^^^^ keyword.declaration.function.wit
+//                       ^^^^^^^^^^^^^^^^^^ meta.function.parameters.wit
+//                       ^ punctuation.section.parameters.begin.wit
+//                        ^^^^^^^ variable.parameter.wit
+//                               ^ punctuation.separator.type.wit
+//                                 ^^^^^^^ meta.type.wit support.type.wit
+//                                        ^ punctuation.section.parameters.end.wit
+//                                         ^ meta.function.wit
+//                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.return-type.wit
+//                                          ^^ keyword.operator.arrow.wit
+//                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.type.wit
+//                                             ^^^^^^ storage.type.wit
+//                                                   ^^^^^^^^^^^^^^^^^^^^^^ meta.generic.wit
+//                                                   ^ punctuation.definition.generic.begin.wit
+//                                                    ^^^^^^^^ meta.type.wit support.type.wit
+//                                                            ^ punctuation.separator.sequence.wit
+//                                                              ^^^^^^^^^^ meta.type.wit support.type.wit
+//                                                                        ^ punctuation.definition.generic.end.wit
+//                                                                         ^ punctuation.terminator.statement.wit
 
 /// Import Declarations ///////////////////////////////////////////////////////
 
@@ -753,6 +779,22 @@ world my-world-2 {
 //             ^^ meta.function.parameters.wit
 //               ^ meta.function.wit
 //                ^^^^^^^ meta.function.return-type.wit
+
+      coro: async func() -> bool;
+//    ^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.resource.body.wit meta.block.wit
+//    ^^^^ meta.function.identifier.wit entity.name.function.wit
+//        ^^^^^^^^^^^^ meta.function.wit
+//        ^ punctuation.separator.type.wit
+//          ^^^^^ keyword.declaration.async.wit
+//                ^^^^ keyword.declaration.function.wit
+//                    ^^ meta.function.parameters.wit
+//                    ^ punctuation.section.parameters.begin.wit
+//                     ^ punctuation.section.parameters.end.wit
+//                      ^ meta.function.wit
+//                       ^^^^^^^ meta.function.return-type.wit
+//                       ^^ keyword.operator.arrow.wit
+//                          ^^^^ meta.type.wit storage.type.wit
+//                              ^ punctuation.terminator.statement.wit
    }
 
     type id = tuple<u32>;
